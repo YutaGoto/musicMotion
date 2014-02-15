@@ -24,8 +24,6 @@ controller.on( 'deviceDisconnected' , function() {
 
 // When the controller is ready, spawn the unicorn!
 controller.on( 'ready' , function(){
-
-  console.log('aaa');
  
 });
 
@@ -38,13 +36,57 @@ controller.on('frame', function() {
   
 controller.connect();
 
+var x=new Array();
+var gestureState=0;
+x[0]=0;
+x[1]=0;
+
 Leap.loop({enableGestures: true}, function(frame){
   // console.log(frame.fingers.length);
-     if (frame.fingers[0]) {
-      var x = frame.fingers[0].tipPosition[0];
-      var y = frame.fingers[0].tipPosition[1];
-      var z = frame.fingers[0].tipPosition[2];
-      console.log(x);
-     }
+     // if (frame.fingers[0]) {
+     //  x[0] = x[1];
+     //  setInterval(function(){},2000);
+     //  x[1] = frame.fingers[0].tipPosition[0];
+     //  // var y = frame.fingers[0].tipPosition[1];
+     //  // var z = frame.fingers[0].tipPosition[2];
+     //  // document.open();
+     //  if(x[1]-x[0]>20){
+     //    console.log("gesture right");
+     //  }else if(x[1]-x[0]<-20){
+     //    console.log("gesture left");
+     //  }
+     //  // document.close();
+     //  // console.log(x[1]);
+     // }
+
+     var i = 0, iz = frame.gestures.length;
+
+     for (; i < iz; ++i) {
+        var gesture = frame.gestures[i];
+
+        if (gesture.type === "swipe") {
+            switch (gesture.state) {
+            case "start":
+                if (gestureState === 0) { // avoid chattering
+                    gestureState = 1;
+                }
+                break;
+            case "update":
+                if (gestureState === 1) { // avoid chattering
+                    gestureState = 2;
+                }
+                break;
+            case "stop":
+                if (gestureState === 2) { // avoid chattering
+                    gestureState = 0;
+                    if(gesture.direction[0]>0){
+                      console.log("swipe LEFT");
+                    }else{
+                      console.log("swipe RIGHT");
+                    }
+                }
+            }
+        }
+      }
 });
 

@@ -80,9 +80,14 @@ Leap.loop({enableGestures: true}, function(frame){
                 if (gestureState === 2) { // avoid chattering
                     gestureState = 0;
                     if(gesture.direction[0]>0){
-                      console.log("swipe LEFT");
-                    }else{
                       console.log("swipe RIGHT");
+                    }else{
+                      console.log("swipe LEFT");
+                    }
+                    if(gesture.direction[1]>0){
+                      console.log("swipe top")
+                    }else{
+                      console.log("swipe bottom");
                     }
                 }
             }
